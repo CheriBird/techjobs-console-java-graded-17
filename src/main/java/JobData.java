@@ -5,10 +5,7 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by LaunchCode
@@ -17,6 +14,7 @@ public class JobData {
 
     private static final String DATA_FILE = "src/main/resources/job_data.csv";
     private static boolean isDataLoaded = false;
+    private static boolean matchFound = false;
 
     private static ArrayList<HashMap<String, String>> allJobs;
 
@@ -75,7 +73,7 @@ public class JobData {
 
             String aValue = row.get(column);
 
-            if (aValue.contains(value)) {
+            if (aValue.toLowerCase().contains(value.toLowerCase())) {
                 jobs.add(row);
             }
         }
@@ -95,7 +93,25 @@ public class JobData {
         loadData();
 
         // TODO - implement this method
-        return null;
+        ArrayList<HashMap<String, String>> foundJobs = new ArrayList<>();
+
+//        if (allJobs.isEmpty()) { return null; }
+        for (HashMap<String, String> row : allJobs) {
+            for (Map.Entry<String, String> entry : row.entrySet()) {
+                String key = entry.getKey();
+                String v = entry.getValue();
+//                if (row.getValue().containsValue(value.toLowerCase())
+//                        || v.toLowerCase().contains(value.toLowerCase())) {
+                if (v.toLowerCase().contains(value.toLowerCase())) {
+                    foundJobs.add(row);
+//                    System.out.println(key + ": " + v);
+                    break;
+                }
+            }
+
+        }
+        return foundJobs;
+
     }
 
     /**
